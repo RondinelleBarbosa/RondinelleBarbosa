@@ -23,19 +23,62 @@ const initialDB = {
     ]
 };
 
-// Persistence Logic (LocalStorage Bridge to Cloud)
+// --- CONFIGURAÇÃO DO FIREBASE ---
+const firebaseConfig = {
+    apiKey: "AIzaSyBMrwQgZLM12gquFSHJ4xCi2ruk2t9m6rg",
+    authDomain: "rapidoauto.firebaseapp.com",
+    projectId: "rapidoauto",
+    storageBucket: "rapidoauto.firebasestorage.app",
+    messagingSenderId: "22353349522",
+    appId: "1:22353349522:web:88354a30e0f41a3377cf4b",
+    measurementId: "G-09Q9YR987Z"
+};
+
+// Initialize Firebase (Compat Mode)
+let dbRef;
+try {
+    if (firebase.apps.length === 0) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    dbRef = firebase.firestore();
+    console.log("🔥 Firebase Conectado: rapidoauto");
+} catch (e) {
+    console.error("Erro ao conectar Firebase:", e);
+    console.log("⚠️ Rodando em Modo Offline (Local)");
+}
+
+let db = initialDB; // Default to initial
+
+// Persistence Logic (Hybrid: Cloud > Local)
 const Storage = {
-    get: () => {
-        const data = localStorage.getItem('rapidauto_db_v1');
-        return data ? JSON.parse(data) : initialDB;
+    load: async () => {
+        if (dbRef) {
+            try {
+                // Try to load from Cloud
+                const doc = await dbRef.collection('tenants').doc('demo-workshop').get();
+                if (doc.exists) {
+                    return doc.data();
+                } else {
+                    // Initialize Cloud with Local Data if empty
+                    await dbRef.collection('tenants').doc('demo-workshop').set(initialDB);
+                    return initialDB;
+                }
+            } catch (error) {
+                console.error("Cloud Load Error", error);
+                return JSON.parse(localStorage.getItem('rapidauto_db_v1')) || initialDB;
+            }
+        } else {
+            // Local Fallback
+            return JSON.parse(localStorage.getItem('rapidauto_db_v1')) || initialDB;
+        }
     },
-    save: (data) => {
+    save: async (data) => {
+        if (dbRef) {
+            dbRef.collection('tenants').doc('demo-workshop').set(data, { merge: true });
+        }
         localStorage.setItem('rapidauto_db_v1', JSON.stringify(data));
     }
 };
-
-// App Database (Loads from Storage or Defaults)
-const db = Storage.get();
 
 // Formatter Utils
 const formatCurrency = (value) => {
@@ -44,7 +87,76 @@ const formatCurrency = (value) => {
 
 // App Logic
 const app = {
-    init: () => {
+    init: async () => {
+        // Real Cloud Auth Listener
+        firebase.auth().onAuthStateChanged(async (user) => {
+            if (user) {
+                // User is signed in.
+                document.getElementById('login-screen').classList.remove('active');
+
+                // Update User Info
+                const userInfoSpan = document.querySelector('.user-info span');
+                if (userInfoSpan) userInfoSpan.innerHTML = `Olá, <b>${user.email.split('@')[0]}</b><br>Gerente`;
+
+                // Load System Data from Cloud
+                dbRef = firebase.firestore();
+                db = await Storage.load();
+                app.loadSystem();
+
+                console.log("Logged in as: ", user.email);
+            } else {
+                // User is signed out.
+                document.getElementById('login-screen').classList.add('active');
+            }
+        });
+    },
+
+    login: () => {
+        const email = document.getElementById('loginEmail').value;
+        const pass = document.getElementById('loginPass').value;
+
+        if (email && pass) {
+            const btn = document.querySelector('#login-screen .btn-primary');
+            const originalText = btn.innerText;
+            btn.innerText = "Verificando...";
+            btn.disabled = true;
+
+            // Firebase Auth Login
+            firebase.auth().signInWithEmailAndPassword(email, pass)
+                .then((userCredential) => {
+                    // Signed in logic handled by onAuthStateChanged
+                })
+                .catch((error) => {
+                    console.error(error);
+                    let msg = "Erro ao entrar.";
+                    if (error.code === 'auth/user-not-found') msg = "Usuário não encontrado.";
+                    if (error.code === 'auth/wrong-password') msg = "Senha incorreta.";
+                    if (error.code === 'auth/invalid-email') msg = "Email inválido.";
+
+                    alert(msg + " (Tente admin@rapidauto.com / 12345678)");
+
+                    // Reset button
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                });
+
+        } else {
+            alert("Preencha todos os campos!");
+        }
+    },
+
+    toggleSidebar: () => {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('mobile-open');
+    },
+
+    logout: () => {
+        firebase.auth().signOut().then(() => {
+            location.reload();
+        });
+    },
+
+    loadSystem: () => {
         app.updateDate();
         app.setupNavigation();
         app.renderOSTable();
@@ -57,14 +169,12 @@ const app = {
         if (posSearch) {
             posSearch.addEventListener('input', app.renderProductGrid);
         }
-
         console.log("RapidAuto ERP Initialized with Persistence");
     },
 
     // Autosave Wrapper
     saveState: () => {
         Storage.save(db);
-        // Here we would sync with Cloud Database in SaaS version
     },
 
 
