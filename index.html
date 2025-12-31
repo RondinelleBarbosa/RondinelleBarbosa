@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RapidAuto ERP | Gestão de Oficina</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Using Phosphor Icons for modern, clean icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon"><i class="ph ph-engine"></i></div>
+                <h2>RapidAuto</h2>
+            </div>
+
+            <nav class="nav-menu">
+                <div class="nav-label">Principal</div>
+                <a href="#" class="nav-item active" data-target="dashboard">
+                    <i class="ph ph-house"></i>
+                    <span>Início</span>
+                </a>
+                <a href="#" class="nav-item" data-target="sales">
+                    <i class="ph ph-shopping-cart"></i>
+                    <span>Vendas</span>
+                </a>
+                <a href="#" class="nav-item" data-target="service-orders">
+                    <i class="ph ph-lightning"></i>
+                    <span>Orçamento Rápido</span>
+                </a>
+
+                <div class="nav-label">Cadastros</div>
+                <a href="#" class="nav-item" data-target="crm" data-tab="tab-clients">
+                    <i class="ph ph-users"></i>
+                    <span>Clientes</span>
+                </a>
+                <a href="#" class="nav-item" data-target="crm" data-tab="tab-suppliers">
+                    <i class="ph ph-truck"></i>
+                    <span>Fornecedores</span>
+                </a>
+                <a href="#" class="nav-item" data-target="inventory">
+                    <i class="ph ph-package"></i>
+                    <span>Produtos</span>
+                </a>
+                <a href="#" class="nav-item" data-target="inventory">
+                    <i class="ph ph-wrench"></i>
+                    <span>Serviços</span>
+                </a>
+
+                <div class="nav-label">Gestão</div>
+                <a href="#" class="nav-item" data-target="reports">
+                    <i class="ph ph-chart-line-up"></i>
+                    <span>Relatórios</span>
+                </a>
+                <a href="#" class="nav-item" data-target="finance">
+                    <i class="ph ph-currency-dollar"></i>
+                    <span>Financeiro</span>
+                </a>
+                <a href="#" class="nav-item" data-target="settings">
+                    <i class="ph ph-receipt"></i>
+                    <span>Notas Fiscal</span>
+                </a>
+            </nav>
+
+            <div class="user-profile">
+                <div class="avatar"><i class="ph ph-user"></i></div>
+                <div class="user-info">
+                    <strong>Admin</strong>
+                    <span>Gerente</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="page-title">
+                    <h1 id="pageTitle">Dashboard</h1>
+                    <span class="date-display" id="currentDate">Carregando data...</span>
+                </div>
+                <div class="actions">
+                    <button class="icon-btn"><i class="ph ph-bell"></i></button>
+                    <button class="btn-primary-sm" onclick="app.openNewOSModal()"><i class="ph ph-plus"></i> Nova
+                        OS</button>
+                </div>
+            </header>
+
+            <!-- SCRRENS -->
+
+            <!-- Dashboard Screen -->
+            <section id="dashboard" class="screen active">
+                <div class="kpi-grid">
+                    <div class="card kpi-card">
+                        <div class="kpi-icon money"><i class="ph ph-currency-dollar"></i></div>
+                        <div class="kpi-info">
+                            <span>Faturamento do Dia</span>
+                            <h3>R$ 3.450,00</h3>
+                            <small class="positive">+12% vs ontem</small>
+                        </div>
+                    </div>
+                    <div class="card kpi-card">
+                        <div class="kpi-icon os"><i class="ph ph-files"></i></div>
+                        <div class="kpi-info">
+                            <span>OS em Aberto</span>
+                            <h3>8</h3>
+                            <small class="neutral">3 aguardando peças</small>
+                        </div>
+                    </div>
+                    <div class="card kpi-card">
+                        <div class="kpi-icon stock"><i class="ph ph-warning-circle"></i></div>
+                        <div class="kpi-info">
+                            <span>Estoque Baixo</span>
+                            <h3>12 Itens</h3>
+                            <small class="negative">Repor urgente</small>
+                        </div>
+                    </div>
+                    <div class="card kpi-card">
+                        <div class="kpi-icon users"><i class="ph ph-users"></i></div>
+                        <div class="kpi-info">
+                            <span>Novos Clientes</span>
+                            <h3>5</h3>
+                            <small class="positive">Essa semana</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card chart-area">
+                        <div class="card-header">
+                            <h3>Desempenho Financeiro</h3>
+                            <select class="filter-select">
+                                <option>Últimos 7 dias</option>
+                                <option>Este Mês</option>
+                            </select>
+                        </div>
+                        <div class="chart-placeholder">
+                            <div class="bar-chart">
+                                <div class="bar-group">
+                                    <div class="bar" style="height: 60%"></div>
+                                    <span class="label">Seg</span>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar" style="height: 80%"></div>
+                                    <span class="label">Ter</span>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar" style="height: 45%"></div>
+                                    <span class="label">Qua</span>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar" style="height: 90%"></div>
+                                    <span class="label">Qui</span>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar" style="height: 75%"></div>
+                                    <span class="label">Sex</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card recent-activity">
+                        <div class="card-header">
+                            <h3>Últimas OS</h3>
+                            <a href="#" class="view-all">Ver tudo</a>
+                        </div>
+                        <ul class="activity-list">
+                            <li>
+                                <div class="status-dot warning"></div>
+                                <div class="activity-details">
+                                    <strong>OS #1024 - Honda Civic</strong>
+                                    <span>Troca de Óleo e Filtros</span>
+                                </div>
+                                <span class="time">10:30</span>
+                            </li>
+                            <li>
+                                <div class="status-dot success"></div>
+                                <div class="activity-details">
+                                    <strong>OS #1023 - Fiat Strada</strong>
+                                    <span>Alinhamento e Balanceamento</span>
+                                </div>
+                                <span class="time">09:15</span>
+                            </li>
+                            <li>
+                                <div class="status-dot danger"></div>
+                                <div class="activity-details">
+                                    <strong>OS #1022 - VW Gol</strong>
+                                    <span>Suspensão (Aguardando Peça)</span>
+                                </div>
+                                <span class="time">Ontem</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Service Orders Screen (NEW) -->
+            <section id="service-orders" class="screen hidden">
+                <div class="card-header">
+                    <div>
+                        <h2>Ordens de Serviço</h2>
+                        <span class="subtitle">Gerencie orçamentos e serviços</span>
+                    </div>
+                    <div class="actions">
+                        <div class="search-box">
+                            <input type="text" id="osSearch" class="form-control"
+                                placeholder="Buscar por cliente, placa...">
+                        </div>
+                        <button class="btn-primary-sm" onclick="app.openNewOSModal()">
+                            <i class="ph ph-plus"></i> Nova OS
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Nº OS</th>
+                                <th>Cliente</th>
+                                <th>Veículo</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="osTableBody">
+                            <!-- JS will populate rows here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Sales Screen (PDV) -->
+            <section id="sales" class="screen hidden">
+                <div class="card-header">
+                    <div>
+                        <h2>Caixa (PDV)</h2>
+                        <span class="subtitle">Venda Rápida e Emissão Fiscal</span>
+                    </div>
+                    <div class="actions">
+                        <span class="status-badge progress"><i class="ph ph-receipt"></i> NFC-e Ativo</span>
+                    </div>
+                </div>
+
+                <div class="pos-container">
+                    <!-- Left: Products -->
+                    <div class="pos-products">
+                        <div class="search-box">
+                            <input type="text" id="posSearch" class="form-control"
+                                placeholder="Buscar produto (Nome ou Cód)...">
+                        </div>
+                        <div class="product-grid" id="productGrid">
+                            <!-- JS Populates -->
+                        </div>
+                    </div>
+
+                    <!-- Right: Cart -->
+                    <div class="pos-cart">
+                        <div class="cart-header">
+                            <h3>Carrinho de Compras</h3>
+                            <span id="cartCount">0 itens</span>
+                        </div>
+                        <div class="cart-items" id="cartItems">
+                            <div class="empty-state" style="margin-top: 2rem;">
+                                <i class="ph ph-shopping-basket" style="font-size: 2rem;"></i>
+                                <p>Carrinho vazio</p>
+                            </div>
+                        </div>
+                        <div class="cart-footer">
+                            <div class="total-row">
+                                <span>Total</span>
+                                <span id="cartTotal">R$ 0,00</span>
+                            </div>
+                            <button class="btn-checkout" onclick="app.checkout()">
+                                <i class="ph ph-check-circle"></i> Finalizar Venda
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inventory Screen -->
+            <section id="inventory" class="screen hidden">
+                <div class="card-header">
+                    <div>
+                        <h2>Gestão de Estoque</h2>
+                        <span class="subtitle">Controle de Peças e Produtos</span>
+                    </div>
+                    <div class="actions">
+                        <button class="btn-secondary"
+                            onclick="app.openModal('productModal'); alert('Vá em Configurações > Importar XML para usar esta função.')"><i
+                                class="ph ph-file-xml"></i> Importar XML</button>
+                        <button class="btn-primary-sm" onclick="app.openModal('productModal')"><i
+                                class="ph ph-plus"></i> Novo Produto</button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Cód.</th>
+                                <th>Produto</th>
+                                <th>Categoria</th>
+                                <th>Estoque</th>
+                                <th>Preço Venda</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTableBody">
+                            <!-- JS Populates -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Finance Screen -->
+            <section id="finance" class="screen hidden">
+                <div class="card-header">
+                    <div>
+                        <h2>Financeiro</h2>
+                        <span class="subtitle">Fluxo de Caixa e DRE</span>
+                    </div>
+                    <div class="actions">
+                        <button class="btn-primary-sm"><i class="ph ph-plus"></i> Nova Transação</button>
+                    </div>
+                </div>
+
+                <!-- Finance KPIs -->
+                <div class="kpi-grid" style="margin-bottom: 1.5rem;">
+                    <div class="card kpi-card">
+                        <div class="kpi-icon money"><i class="ph ph-arrow-up-right"></i></div>
+                        <div class="kpi-info">
+                            <span>Receitas (Mês)</span>
+                            <h3>R$ 12.450,00</h3>
+                        </div>
+                    </div>
+                    <div class="card kpi-card">
+                        <div class="kpi-icon users"><i class="ph ph-arrow-down-right"></i></div>
+                        <div class="kpi-info">
+                            <span>Despesas (Mês)</span>
+                            <h3>R$ 4.200,00</h3>
+                        </div>
+                    </div>
+                    <div class="card kpi-card">
+                        <div class="kpi-icon stock"><i class="ph ph-wallet"></i></div>
+                        <div class="kpi-info">
+                            <span>Saldo Atual</span>
+                            <h3 style="color: var(--success)">R$ 8.250,00</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Descrição</th>
+                                <th>Categoria</th>
+                                <th>Tipo</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="financeTableBody">
+                            <!-- JS Populates -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Registration Hub (Central de Cadastros - REPLACED CRM) -->
+            <section id="crm" class="screen hidden">
+                <div class="card-header">
+                    <div>
+                        <h2>Central de Cadastros</h2>
+                        <span class="subtitle">Gerencie Clientes, Fornecedores e Usuários do Sistema</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="tabs-header">
+                        <button class="tab-btn active" onclick="app.switchTab('tab-clients', this)">Clientes</button>
+                        <button class="tab-btn" onclick="app.switchTab('tab-suppliers', this)">Fornecedores</button>
+                        <button class="tab-btn" onclick="app.switchTab('tab-employees', this)">Funcionários</button>
+                        <button class="tab-btn" onclick="app.switchTab('tab-users', this)">Privilégios &
+                            Usuários</button>
+                    </div>
+
+                    <!-- Tab: Clientes -->
+                    <div id="tab-clients" class="tab-content active">
+                        <div class="actions" style="justify-content: flex-end; margin-bottom: 1rem;">
+                            <button class="btn-primary-sm"><i class="ph ph-plus"></i> Novo Cliente</button>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>CPF/CNPJ</th>
+                                    <th>Contato</th>
+                                    <th>Cidade</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>João Silva</td>
+                                    <td>123.456.789-00</td>
+                                    <td>(11) 99999-9999</td>
+                                    <td>São Paulo/SP</td>
+                                    <td><button class="action-btn"><i class="ph ph-pencil"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>Maria Oliveira</td>
+                                    <td>987.654.321-99</td>
+                                    <td>(21) 98888-8888</td>
+                                    <td>Rio de Janeiro/RJ</td>
+                                    <td><button class="action-btn"><i class="ph ph-pencil"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Tab: Fornecedores -->
+                    <div id="tab-suppliers" class="tab-content">
+                        <div class="actions" style="justify-content: flex-end; margin-bottom: 1rem;">
+                            <button class="btn-primary-sm"><i class="ph ph-plus"></i> Novo Fornecedor</button>
+                        </div>
+                        <div class="empty-state" style="margin: 2rem 0;">
+                            <i class="ph ph-truck" style="font-size: 2rem;"></i>
+                            <p>Nenhum fornecedor cadastrado.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Funcionários -->
+                    <div id="tab-employees" class="tab-content">
+                        <div class="actions" style="justify-content: flex-end; margin-bottom: 1rem;">
+                            <button class="btn-primary-sm"><i class="ph ph-plus"></i> Novo Funcionário</button>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Cargo</th>
+                                    <th>Admissão</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Carlos Mecânico</td>
+                                    <td>Mecânico Chefe</td>
+                                    <td>10/01/2023</td>
+                                    <td><span class="status-badge done">Ativo</span></td>
+                                    <td><button class="action-btn"><i class="ph ph-pencil"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Tab: Users & Access -->
+                    <div id="tab-users" class="tab-content">
+                        <div class="actions" style="justify-content: flex-end; margin-bottom: 1rem;">
+                            <button class="btn-primary-sm"><i class="ph ph-user-plus"></i> Novo Usuário</button>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Usuário</th>
+                                    <th>Email</th>
+                                    <th>Nível de Acesso</th>
+                                    <th>Último Login</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Admin</strong> <small>(Você)</small></td>
+                                    <td>admin@rapidauto.com</td>
+                                    <td><span class="role-badge role-admin">Administrador</span></td>
+                                    <td>Agora</td>
+                                    <td><button class="action-btn" disabled><i class="ph ph-lock"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>Carlos Mecânico</td>
+                                    <td>carlos@rapidauto.com</td>
+                                    <td><span class="role-badge role-user">Técnico</span></td>
+                                    <td>Ontem, 18:00</td>
+                                    <td><button class="action-btn"><i class="ph ph-pencil"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>Ana Gerente</td>
+                                    <td>ana@rapidauto.com</td>
+                                    <td><span class="role-badge role-manager">Gerente</span></td>
+                                    <td>Hoje, 08:30</td>
+                                    <td><button class="action-btn"><i class="ph ph-pencil"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="reports" class="screen hidden">
+                <div class="empty-state">
+                    <i class="ph ph-chart-line-up"></i>
+                    <h2>Relatórios Gerenciais</h2>
+                    <p>Em desenvolvimento...</p>
+                </div>
+            </section>
+
+            <!-- Settings Screen -->
+            <section id="settings" class="screen hidden">
+                <div class="card-header">
+                    <div>
+                        <h2>Configurações do Sistema</h2>
+                        <span class="subtitle">Backup, Integrações e Preferências</span>
+                    </div>
+                </div>
+
+                <div class="card" style="max-width: 800px; margin: 0 auto;">
+                    <div class="form-group">
+                        <label style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1rem;">Segurança de
+                            Dados</label>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <div
+                                style="flex: 1; padding: 1.5rem; background: var(--bg-body); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                                <h4 style="margin-bottom: 0.5rem;"><i class="ph ph-download-simple"></i> Backup
+                                    Automático</h4>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                                    Exporte todos os dados do sistema (Clientes, OS, Estoque) para um arquivo seguro
+                                    JSON.
+                                </p>
+                                <button class="btn-primary-sm" onclick="app.backupSystem()">
+                                    Fazer Backup Agora
+                                </button>
+                            </div>
+
+                            <div
+                                style="flex: 1; padding: 1.5rem; background: var(--bg-body); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                                <h4 style="margin-bottom: 0.5rem;"><i class="ph ph-upload-simple"></i> Importar XML
+                                    (NFe)</h4>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                                    Dê entrada no estoque automaticamente importando o XML da nota fiscal do fornecedor.
+                                </p>
+                                <button class="btn-secondary" onclick="document.getElementById('xmlInput').click()">
+                                    <i class="ph ph-file-xml"></i> Selecionar XML
+                                </button>
+                                <input type="file" id="xmlInput" style="display: none;" accept=".xml"
+                                    onchange="app.importXML(this)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group"
+                        style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                        <label>Integrações Ativas</label>
+                        <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                            <span class="status-badge done"><i class="ph ph-whatsapp-logo"></i> WhatsApp API</span>
+                            <span class="status-badge done"><i class="ph ph-car"></i> Busca Placa</span>
+                            <span class="status-badge done"><i class="ph ph-receipt"></i> SEFAZ Mock</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="newOSModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Nova Ordem de Serviço</h3>
+                <button class="close-modal" onclick="app.closeNewOSModal()"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Buscar Veículo (Placa)</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="searchPlate" placeholder="ABC-1234">
+                        <button class="btn-primary-sm" onclick="app.mockSearchPlate()"><i
+                                class="ph ph-magnifying-glass"></i></button>
+                    </div>
+                    <small style="color: var(--success); display: none;" id="vehicleFoundMsg">Veículo
+                        encontrado!</small>
+                </div>
+                <div class="top-bar">
+                    <div class="search-bar">
+                        <i class="ph ph-magnifying-glass"></i>
+                        <input type="text" placeholder="Buscar em todo o sistema (OS, Clientes, Peças)...">
+                    </div>
+                    <div class="user-menu" style="display: flex; gap: 1rem; align-items: center;">
+                        <button class="btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;"
+                            onclick="app.openPlateModal()">
+                            <i class="ph ph-car"></i> Consultar Placa
+                        </button>
+                        <div class="avatar">AD</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Veículo / Modelo</label>
+                    <input type="text" class="form-control" id="osVehicle" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label>Cliente</label>
+                    <input type="text" class="form-control" id="osClient" placeholder="Nome do Cliente">
+                </div>
+
+                <div class="form-group">
+                    <label>Descrição do Problema</label>
+                    <textarea class="form-control" id="osDescription" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Valor Orçamento (R$)</label>
+                    <input type="number" class="form-control" id="osValue" placeholder="0.00">
+                </div>
+
+                <div class="form-group">
+                    <label>Status Inicial</label>
+                    <select class="form-control" id="osStatus">
+                        <option value="pending">Pendente (Orçamento)</option>
+                        <option value="progress">Em Andamento</option>
+                        <option value="waiting">Aguardando Peças</option>
+                        <option value="done">Concluído</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="app.closeNewOSModal()">Cancelar</button>
+                <button class="btn-primary" onclick="app.saveOS()">Salvar OS</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
